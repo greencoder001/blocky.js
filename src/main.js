@@ -58,6 +58,36 @@ if (window) {
   window.isSuccess = isSuccess
 }
 
+class BlockyLanguage {
+  constructor (name, { events } = { events: [] }) {
+    this.name = name
+    this.events = events
+  }
+}
+
+class BlockyEvent {
+  constructor () {
+    this.__type = 'Event'
+  }
+
+  define ({ name, id, argv } = { name: 'Event', id: 'event', argv: [] }) {
+    this.name = name
+    this.id = id
+    this.argv = argv
+  }
+}
+
+class BlockyRunEvent extends BlockyEvent {
+  constructor () {
+    super()
+    this.define({
+      name: 'Run',
+      id: 'runevent',
+      argv: []
+    })
+  }
+}
+
 class Blocky {
   constructor (selector) {
     this.selector = selector
@@ -74,12 +104,35 @@ class Blocky {
     }
   }
 
+  run () {
+    this.initHTML()
+  }
+
+  initHTML () {
+    this.elem.innerHTML = `
+      <div class="blocky-sideview">
+        <h1>${this.lang.name}</h1>
+      </div>
+      <div class="blocky-code">
+
+      </div>
+    `
+    this.elem.style.fontFamily = 'Menlo, Consolas, DejaVu Sans Mono, OpenSans monospace, sans-serif'
+  }
+
   setSize (height, width) {
     this.height = height
     this.width = width
     this.elem.style.height = this.height
     this.elem.style.width = this.width
   }
+
+  setLang (language) {
+    this.lang = language
+  }
 }
 
 if (window) window.Blocky = Blocky
+if (window) window.BlockyEvent = BlockyEvent
+if (window) window.BlockyLanguage = BlockyLanguage
+if (window) window.BlockyRunEvent = BlockyRunEvent

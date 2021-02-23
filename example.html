@@ -7,12 +7,38 @@
     <script type="text/javascript">
       var editor
       window.addEventListener('DOMContentLoaded', () => {
-        editor = new Blocky('#editor')
+        class CommandEvent extends BlockyEvent {
+          constructor () {
+            super()
+            this.define({
+              name: 'On Command',
+              id: 'cmdevent',
+              argv: [
+                this.arg('cmd', 'Represents the Command', String),
+                this.arg('argv', 'All arguments of the command', Array),
+                this.arg('author', 'The sender of the message', Object),
+                this.arg('channel', 'The channel of the message', Object)
+              ]
+            })
+          }
+        }
+
+        const language = new BlockyLanguage('Dean Script', {
+          events: [
+            BlockyRunEvent,
+            CommandEvent
+          ]
+        })
+
+        window.editor = new Blocky('#editor')
         editor.setSize('100vh', '100vw')
+        editor.setLang(language)
+
+        editor.run()
       })
     </script>
   </head>
-  <body style="margin:0;padding:0;width:100vw;height:100vh">
+  <body style="margin:0;padding:0;width:100vw;height:100vh;position:fixed;top:0;left:0;">
     <div class="editor" id="editor"></div>
   </body>
 </html>
